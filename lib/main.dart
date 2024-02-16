@@ -1,142 +1,143 @@
 import 'package:flutter/material.dart';
 
-/// Flutter code sample for [NavigationBar].
+import 'animations.dart';
+import 'models/data.dart' as data;
+import 'models/models.dart';
+import 'transitions/list_detail_transition.dart';
+import 'widgets/animated_floating_action_button.dart';
+import 'widgets/disappearing_bottom_navigation_bar.dart';
+import 'widgets/disappearing_navigation_rail.dart';
+import 'widgets/email_list_view.dart';
+import 'widgets/reply_list_view.dart';
 
-void main() => runApp(const NavigationBarApp());
+void main() {
+  runApp(const MainApp());
+}
 
-class NavigationBarApp extends StatelessWidget {
-  const NavigationBarApp({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      home: const NavigationExample(),
+      theme: ThemeData.light(useMaterial3: true),
+      home: Feed(currentUser: data.user_0),
     );
   }
 }
 
-class NavigationExample extends StatefulWidget {
-  const NavigationExample({super.key});
+class Feed extends StatefulWidget {
+  const Feed({
+    super.key,
+    required this.currentUser,
+  });
+
+  final User currentUser;
 
   @override
-  State<NavigationExample> createState() => _NavigationExampleState();
+  State<Feed> createState() => _FeedState();
 }
 
-class _NavigationExampleState extends State<NavigationExample> {
-  int currentPageIndex = 0;
+class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
+  late final _colorScheme = Theme.of(context).colorScheme;
+  late final _backgroundColor = Color.alphaBlend(
+      _colorScheme.primary.withOpacity(0.14), _colorScheme.surface);
+  late final _controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      reverseDuration: const Duration(milliseconds: 1250),
+      value: 0,
+      vsync: this);
+  late final _railAnimation = RailAnimation(parent: _controller);
+  late final _railFabAnimation = RailFabAnimation(parent: _controller);
+  late final _barAnimation = BarAnimation(parent: _controller);
+
+  int selectedIndex = 0;
+  bool controllerInitialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final double width = MediaQuery.of(context).size.width;
+    final AnimationStatus status = _controller.status;
+    if (width > 600) {
+      if (status != AnimationStatus.forward &&
+          status != AnimationStatus.completed) {
+        _controller.forward();
+      }
+    } else {
+      if (status != AnimationStatus.reverse &&
+          status != AnimationStatus.dismissed) {
+        _controller.reverse();
+      }
+    }
+    if (!controllerInitialized) {
+      controllerInitialized = true;
+      _controller.value = width > 600 ? 1 : 0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        indicatorColor: Colors.amber,
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Badge(child: Icon(Icons.notifications_sharp)),
-            label: 'Notifications',
-          ),
-          NavigationDestination(
-            icon: Badge(
-              label: Text('2'),
-              child: Icon(Icons.messenger_sharp),
-            ),
-            label: 'Messages',
-          ),
-        ],
-      ),
-      body: <Widget>[
-        /// Home page
-        Card(
-          shadowColor: Colors.transparent,
-          margin: const EdgeInsets.all(8.0),
-          child: SizedBox.expand(
-            child: Center(
-              child: Text(
-                'Home page',
-                style: theme.textTheme.titleLarge,
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return Scaffold(
+          body: Row(
+            children: [
+              DisappearingNavigationRail(
+                railAnimation: _railAnimation,
+                railFabAnimation: _railFabAnimation,
+                selectedIndex: selectedIndex,
+                backgroundColor: _backgroundColor,
+                onDestinationSelected: (index) {
+                  setState(() {
+                    selectedIndex = index;
+                  });
+                },
               ),
-            ),
-          ),
-        ),
-
-        /// Notifications page
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 1'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 2'),
-                  subtitle: Text('This is a notification'),
+              Expanded(
+                child: Container(
+                  color: _backgroundColor,
+                  child: ListDetailTransition(
+                    animation: _railAnimation,
+                    one: EmailListView(
+                      selectedIndex: selectedIndex,
+                      onSelected: (index) {
+                        setState(() {
+                          selectedIndex = index;
+                        });
+                      },
+                      currentUser: widget.currentUser,
+                    ),
+                    two: const ReplyListView(),
+                  ),
                 ),
               ),
             ],
           ),
-        ),
-
-        /// Messages page
-        ListView.builder(
-          reverse: true,
-          itemCount: 2,
-          itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-              return Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  margin: const EdgeInsets.all(8.0),
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Text(
-                    'Hello',
-                    style: theme.textTheme.bodyLarge!
-                        .copyWith(color: theme.colorScheme.onPrimary),
-                  ),
-                ),
-              );
-            }
-            return Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                margin: const EdgeInsets.all(8.0),
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Text(
-                  'Hi!',
-                  style: theme.textTheme.bodyLarge!
-                      .copyWith(color: theme.colorScheme.onPrimary),
-                ),
-              ),
-            );
-          },
-        ),
-      ][currentPageIndex],
+          floatingActionButton: AnimatedFloatingActionButton(
+            animation: _barAnimation,
+            onPressed: () {},
+            child: const Icon(Icons.add),
+          ),
+          bottomNavigationBar: DisappearingBottomNavigationBar(
+            barAnimation: _barAnimation,
+            selectedIndex: selectedIndex,
+            onDestinationSelected: (index) {
+              setState(() {
+                selectedIndex = index;
+              });
+            },
+          ),
+        );
+      },
     );
   }
 }
