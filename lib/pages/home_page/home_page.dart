@@ -8,9 +8,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _pinned = true;
-  bool _snap = false;
-  bool _floating = false;
+  final bool _pinned = true;
+  final bool _snap = false;
+  final bool _floating = false;
   int currentPageIndex = 0;
 
 // [SliverAppBar]s are typically used in [CustomScrollView.slivers], which in
@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               },
-              childCount: 20,
+              childCount: 10,
             ),
           ),
         ],
