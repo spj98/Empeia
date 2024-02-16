@@ -6,7 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:empeia/main.dart';
-import 'package:empeia/typography_screen.dart';
+import 'package:empeia/hidden/typography_screen.dart';
 
 import 'component_screen_test.dart';
 

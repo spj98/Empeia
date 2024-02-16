@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'color_palettes_screen.dart';
 import 'component_screen.dart';
 import 'constants.dart';
-import 'elevation_screen.dart';
-import 'typography_screen.dart';
+// import 'elevation_screen.dart';
+// import 'typography_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -125,18 +125,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         );
       case ScreenSelected.color:
         return const ColorPalettesScreen();
-      case ScreenSelected.typography:
-        return const TypographyScreen();
-      case ScreenSelected.elevation:
-        return const ElevationScreen();
+      // case ScreenSelected.typography:
+      //   return const TypographyScreen();
+      // case ScreenSelected.elevation:
+      //   return const ElevationScreen();
     }
   }
 
   PreferredSizeWidget createAppBar() {
     return AppBar(
       title: widget.useMaterial3
-          ? const Text('Material 3')
-          : const Text('Material 2'),
+          ? const Text('Empeia | User View')
+          : const Text('Empeia | Admin View'),
       actions: !showMediumSizeLayout && !showLargeSizeLayout
           ? [
               _BrightnessButton(
@@ -562,10 +562,10 @@ class _ExpandedImageColorAction extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Material(
                     borderRadius: BorderRadius.circular(4.0),
-                    elevation: imageSelected == ColorImageProvider.values[i] &&
-                            colorSelectionMethod == ColorSelectionMethod.image
-                        ? 3
-                        : 0,
+                    // elevation: imageSelected == ColorImageProvider.values[i] &&
+                    //         colorSelectionMethod == ColorSelectionMethod.image
+                    //     ? 3
+                    //     : 0,
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: ClipRRect(

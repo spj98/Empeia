@@ -5,7 +5,7 @@
 // ignore_for_file: avoid_types_on_closure_parameters
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:empeia/elevation_screen.dart';
+import 'package:empeia/hidden/elevation_screen.dart';
 import 'package:empeia/main.dart';
 
 import 'component_screen_test.dart';

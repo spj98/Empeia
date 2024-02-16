@@ -94,7 +94,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Material 3',
+      title: 'Empeia Demo',
       themeMode: themeMode,
       theme: ThemeData(
         colorSchemeSeed: colorSelectionMethod == ColorSelectionMethod.colorSeed

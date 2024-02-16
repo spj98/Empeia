@@ -21,7 +21,7 @@ enum ColorSelectionMethod {
 }
 
 enum ColorSeed {
-  baseColor('M3 Baseline', Color(0xff6750a4)),
+  baseColor('Violet', Color(0xff6750a4)),
   indigo('Indigo', Colors.indigo),
   blue('Blue', Colors.blue),
   teal('Teal', Colors.teal),
@@ -57,9 +57,9 @@ enum ColorImageProvider {
 
 enum ScreenSelected {
   component(0),
-  color(1),
-  typography(2),
-  elevation(3);
+  color(1);
+  // typography(2);
+  // elevation(3);
 
   const ScreenSelected(this.value);
   final int value;
