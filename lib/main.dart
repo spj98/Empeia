@@ -1,9 +1,11 @@
+import 'package:empeia/models/data.dart';
 import 'package:empeia/pages/home_page/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'animations.dart';
 // import 'models/data.dart' as data;
 import 'models/models.dart';
+import 'pages/settings_page/settings_page.dart';
 import 'transitions/list_detail_transition.dart';
 import 'widgets/animated_floating_action_button.dart';
 import 'widgets/disappearing_bottom_navigation_bar.dart';
@@ -24,13 +26,19 @@ class MainApp extends StatelessWidget {
       routes: [
         GoRoute(
           path: '/',
-          builder: (context, state) => const HomePage(),
+          builder: (context, state) => HomePage(
+            currentUser: user_0,
+          ),
         ),
+        GoRoute(
+          path: "/settings",
+          builder: (context, state) => const SettingsPage(),
+        )
       ],
     );
     return MaterialApp.router(
-      theme: ThemeData.light(useMaterial3: true),
       routerConfig: router,
+      theme: ThemeData.light(useMaterial3: true),
     );
   }
 }
@@ -133,7 +141,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
           ),
           floatingActionButton: AnimatedFloatingActionButton(
             animation: _barAnimation,
-            onPressed: () => context.go('/'),
+            onPressed: () {},
             child: const Icon(Icons.add),
           ),
           bottomNavigationBar: DisappearingBottomNavigationBar(
